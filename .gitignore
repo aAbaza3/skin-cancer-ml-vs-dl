@@ -14,7 +14,10 @@ __pycache__
 *.pyc
 *.pyo
 src/__pycache__/
+*.h5
 
+# Ignore JSON files
+*.json
 
 
 

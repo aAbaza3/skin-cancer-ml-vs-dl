@@ -1,62 +1,70 @@
-# Training CNN model
 import os
+import json
+import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.preprocessing import label_binarize
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import EarlyStopping
 from preprocessing import preprocess_data
-from evaluate import evaluate_model
 
-def train_cnn():
-    # تحميل البيانات
-    X, y = preprocess_data()
+# تحميل البيانات
+X, y, class_names = preprocess_data(img_size=(128, 128))
 
-    # تقسيم البيانات
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# تحويل الليبلات إلى one-hot
+y_cat = to_categorical(y, num_classes=len(class_names))
 
-    input_shape = X_train.shape[1:]
+# تقسيم البيانات
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y_cat, test_size=0.2, random_state=42
+)
 
-    # بناء النموذج
-    model = Sequential([
-        Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
-        MaxPooling2D(pool_size=(2, 2)),
+# بناء الموديل CNN
+model = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(128, 128, 3)),
+    MaxPooling2D(2, 2),
+    Conv2D(64, (3, 3), activation='relu'),
+    MaxPooling2D(2, 2),
+    Flatten(),
+    Dense(128, activation='relu'),
+    Dropout(0.5),
+    Dense(len(class_names), activation='softmax')
+])
 
-        Conv2D(64, (3, 3), activation='relu'),
-        MaxPooling2D(pool_size=(2, 2)),
+model.compile(optimizer=Adam(),
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
 
-        Conv2D(128, (3, 3), activation='relu'),
-        MaxPooling2D(pool_size=(2, 2)),
+# تدريب الموديل
+model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.1)
 
-        Flatten(),
-        Dense(128, activation='relu'),
-        Dropout(0.5),
-        Dense(len(set(y)), activation='softmax')  # عدد الفئات
-    ])
+# تقييم الأداء
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f"CNN Test Accuracy: {accuracy:.4f}")
 
-    model.compile(optimizer=Adam(learning_rate=0.001),
-                  loss='sparse_categorical_crossentropy',
-                  metrics=['accuracy'])
+# التنبؤ واحصائيات مفصلة
+y_pred_probs = model.predict(X_test)
+y_test_labels = np.argmax(y_test, axis=1)
+y_pred_labels = np.argmax(y_pred_probs, axis=1)
 
-    # إيقاف مبكر للتدريب
-    early_stop = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
+# حساب AUC
+y_test_bin = label_binarize(y_test_labels, classes=range(len(class_names)))
+auc_score = roc_auc_score(y_test_bin, y_pred_probs, multi_class='ovo', average='macro')
 
-    # تدريب النموذج
-    print("Training CNN model...")
-    model.fit(X_train, y_train, 
-              validation_split=0.2,
-              epochs=15,
-              batch_size=32,
-              callbacks=[early_stop],
-              verbose=1)
+# حساب باقي المقاييس
+cnn_metrics = {
+    "Accuracy": accuracy_score(y_test_labels, y_pred_labels),
+    "Precision": precision_score(y_test_labels, y_pred_labels, average='macro'),
+    "Recall": recall_score(y_test_labels, y_pred_labels, average='macro'),
+    "F1-Score": f1_score(y_test_labels, y_pred_labels, average='macro'),
+    "AUC-ROC": auc_score
+}
 
-    # التقييم
-    evaluate_model(model, X_test, y_test, is_dl=True)
-    # حفظ النموذج
-    model.save("models/cnn_model.h5")
-    print("CNN model saved to models/cnn_model.h5")
+# حفظ النتائج في فايل JSON
+with open("cnn_metrics.json", "w") as f:
+    json.dump(cnn_metrics, f, indent=4)
 
-
-if __name__ == "__main__":
-    train_cnn()
-
+# حفظ الموديل
+model.save("cnn_model.h5")
