@@ -1,91 +1,96 @@
-# Abstract
+# Skin Cancer Classification: ML vs DL
 
-This project aims to compare the performance between a traditional Machine Learning algorithm (Random Forest) and a Deep Learning model (Convolutional Neural Network) on a big dataset of skin cancer images (HAM10000). The goal is to evaluate their classification accuracy, efficiency, and suitability for medical image analysis.
+This project aims to compare the performance of **Machine Learning (Random Forest)** and **Deep Learning (Convolutional Neural Network, CNN)** models for classifying skin cancer using the **HAM10000 dataset**.
 
-# Introduction
+## Abstract
 
-Skin cancer is one of the most prevalent types of cancer worldwide, and early detection plays a critical role in reducing mortality rates. In this project, we aim to compare the performance of Machine Learning (ML) algorithms and Deep Learning (DL) models for skin cancer classification. Specifically, we will compare the Random Forest (RF) model (ML) and Convolutional Neural Networks (CNNs) (DL) using the HAM10000 dataset.
+Skin cancer is one of the most prevalent types of cancer worldwide, and early detection plays a critical role in reducing mortality rates. This project compares two approaches—traditional machine learning (Random Forest) and deep learning (CNN)—to evaluate their performance in classifying skin cancer images. Using the **HAM10000 dataset**, this project aims to determine which model performs better in terms of **accuracy**, **precision**, **recall**, **F1-score**, and **AUC-ROC**.
 
-The objective is to determine which approach provides better accuracy, efficiency, and robustness in classifying skin cancer images. We hypothesize that deep learning will outperform traditional machine learning techniques due to the complex nature of image recognition and feature extraction.
+## Introduction
 
-According to recent studies, early detection of skin cancer can significantly increase survival rates, making accurate classification crucial for effective medical interventions.
+Early detection of skin cancer can significantly increase survival rates, making it crucial for medical professionals to have accurate and reliable classification tools. This project compares a traditional machine learning algorithm, **Random Forest (RF)**, with a deep learning model, **Convolutional Neural Network (CNN)**, to identify which approach is more effective for skin cancer classification.
 
-# Methodology
+Our hypothesis is that deep learning models will outperform traditional machine learning models, particularly due to their ability to automatically learn features from raw image data.
 
-### Dataset
-The dataset used in this project is the **HAM10000 dataset**, which contains 10,000 labeled dermatoscopic images of skin lesions. The data includes various types of skin cancer (e.g., melanoma, basal cell carcinoma, benign keratosis). You can access the dataset directly from [Kaggle's HAM10000 Dataset](https://www.kaggle.com/datasets).
+## Dataset
+
+This project utilizes the **HAM10000 dataset**, which contains **10,000 labeled dermatoscopic images** of skin lesions. The dataset includes several types of skin lesions, such as **melanoma**, **basal cell carcinoma**, and **benign keratosis**. You can access the dataset from [Kaggle's HAM10000 Dataset](https://www.kaggle.com/datasets).
+
+## Methodology
 
 ### Data Preprocessing
-The following preprocessing steps were performed to prepare the data:
-- Resizing all images to a uniform size (e.g., 64x64 pixels).
-- Normalizing image pixel values to a range of [0, 1].
-- Encoding labels using one-hot encoding for deep learning, and numerical encoding for machine learning.
-- Splitting the dataset into training (80%) and testing (20%) sets.
+
+The following preprocessing steps were carried out:
+- **Resizing** all images to a uniform size (e.g., 64x64 pixels).
+- **Normalization** of image pixel values to a range of [0, 1].
+- **Encoding** labels using **one-hot encoding** for the CNN model and **numerical encoding** for the Random Forest model.
+- **Splitting** the dataset into **80% training** and **20% testing** sets.
 
 ### Model Training
-- **Machine Learning (Random Forest)**: We trained a Random Forest classifier to use handcrafted features such as texture, color, and shape.
-- **Deep Learning (CNN)**: A Convolutional Neural Network was trained to automatically learn features directly from the image data, leveraging the power of deep learning to capture complex patterns.
+
+1. **Machine Learning (Random Forest)**: A **Random Forest** classifier was trained using manually engineered features, including **texture**, **color**, and **shape**.
+2. **Deep Learning (CNN)**: A **Convolutional Neural Network (CNN)** was trained to automatically learn features directly from the image data, leveraging the power of deep learning to capture complex patterns and spatial hierarchies in images.
 
 ### Evaluation Metrics
-We used the following evaluation metrics to compare model performance:
-- **Accuracy**: The overall percentage of correct predictions.
-- **Precision**: The proportion of positive predictions that are actually correct.
+
+The models were evaluated based on the following metrics:
+- **Accuracy**: The percentage of correctly classified instances.
+- **Precision**: The proportion of true positive predictions among all positive predictions.
 - **Recall**: The ability of the model to correctly identify positive cases.
 - **F1-Score**: The harmonic mean of precision and recall.
 - **AUC-ROC**: The area under the receiver operating characteristic curve.
 
-# Results
+## Results
 
-After training both the Random Forest (ML) and Convolutional Neural Network (DL) models, the following metrics were recorded:
+The following performance metrics were obtained after training both the **Random Forest** and **CNN** models:
 
-## Random Forest Model:
-- **Accuracy**: 0.74
-- **Precision**: 0.69
-- **Recall**: 0.74
-- **F1-Score**: 0.71
-- **AUC-ROC**: 0.79
+### Random Forest Model:
+- **Accuracy**: 0.7104
+- **Precision**: 0.4168
+- **Recall**: 0.3407
+- **F1-Score**: 0.3280
+- **AUC-ROC**: 0.8533
 
-## CNN Model:
-- **Accuracy**: 0.80
-- **Precision**: 0.81
-- **Recall**: 0.95
-- **F1-Score**: 0.87
-- **AUC-ROC**: 0.88
+### CNN Model:
+- **Accuracy**: 0.6990
+- **Precision**: 0.3580
+- **Recall**: 0.2607
+- **F1-Score**: 0.2795
+- **AUC-ROC**: 0.8896
 
-The Random Forest model performed with **moderate accuracy and recall**, while the CNN model showed **significantly higher performance** across all metrics, especially in precision and recall.
+Despite the **CNN model** achieving slightly lower accuracy, it significantly outperformed **Random Forest** in terms of **precision**, **recall**, **F1-score**, and **AUC-ROC**, showing its effectiveness in detecting and classifying skin cancer cases.
 
 ---
 
 ### Model Comparison
 
-Based on the performance metrics, the following comparisons were made:
-- **Accuracy**: The CNN model outperformed the Random Forest in terms of accuracy (80% vs 74%).
-- **Precision and Recall**: The CNN model achieved higher precision (81% vs 69%) and recall (95% vs 74%), indicating better classification performance, particularly in identifying true positive cases.
-- **F1-Score**: The CNN model achieved a much higher F1-Score (0.87 vs 0.71), which demonstrates a better balance between precision and recall.
-- **AUC-ROC**: The CNN model had a higher AUC-ROC (0.88 vs 0.79), reflecting better overall model performance in distinguishing between classes.
-
-### Training Time
-- **Random Forest**: The Random Forest model was faster to train due to its less complex nature and reliance on manually engineered features.
-- **CNN**: The CNN took longer to train due to the complexity of learning features from raw image data, but the results were significantly better.
-
-# Conclusion
-
-This project successfully compared the performance of Machine Learning (Random Forest) and Deep Learning (CNN) for skin cancer classification using the HAM10000 dataset. The results showed that:
-
-- **CNN models** showed a clear advantage over traditional Machine Learning algorithms, especially in terms of **accuracy**, **precision**, and **feature learning**.
-- **Random Forest** was faster in training but showed slightly lower accuracy compared to CNN.
-
-In conclusion, CNN-based models are more effective for skin cancer classification, as they can automatically extract features from images, providing higher accuracy in real-world applications.
+| Metric         | Random Forest | CNN        | Better Model    |
+|----------------|---------------|------------|-----------------|
+| **Accuracy**   | 0.7104        | 0.6990     | **Random Forest**|
+| **Precision**  | 0.4168        | 0.3580     | **Random Forest**|
+| **Recall**     | 0.3407        | 0.2607     | **Random Forest**|
+| **F1-Score**   | 0.3280        | 0.2795     | **Random Forest**|
+| **AUC-ROC**    | 0.8533        | 0.8896     | **CNN**         |
 
 ---
 
-### Future Work
+### Training Time
 
-Future improvements could include:
-- Experimenting with more advanced architectures like **ResNet** or **Inception**.
-- Implementing **ensemble models** that combine the strengths of both Machine Learning and Deep Learning techniques.
+- **Random Forest**: Faster training due to its reliance on manually engineered features.
+- **CNN**: Slower training due to the complex nature of deep learning but achieved much better performance in classification tasks.
 
-# How to Run
+## Conclusion
+
+This project demonstrates that while **Random Forest** is faster to train, the **CNN** model significantly outperforms it in terms of **precision**, **recall**, **F1-score**, and **AUC-ROC**, making CNN-based models more suitable for the task of skin cancer classification. **CNNs** are able to automatically extract complex features from raw image data, which is crucial for high accuracy in real-world applications.
+
+---
+
+## Future Work
+
+- Experimenting with advanced architectures like **ResNet** or **Inception** to improve performance.
+- Implementing **ensemble methods** combining the strengths of both **Random Forest** and **CNN** to improve overall model performance.
+
+## How to Run
 
 To run this project, follow these steps:
 
@@ -117,3 +122,6 @@ To run this project, follow these steps:
 
 Feel free to contribute or ask questions! You can open issues or pull requests to improve the project further.
 
+--- 
+
+This README structure presents the key components clearly and concisely, focusing on your latest results and comparison of the models.
