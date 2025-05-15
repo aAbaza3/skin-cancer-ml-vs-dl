@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 ---
 
 # Skin Cancer Classification: Machine Learning vs Deep Learning
